@@ -305,6 +305,31 @@ The final work was reviewed, tested and understood before submission. Database f
 
 ## Author
 
+## Part 1 Completion Checklist
+
+- [x] Entity Relationship Diagram completed
+- [x] Minimum of six database entities included
+- [x] Primary and foreign keys identified
+- [x] Database relationships and cardinality defined
+- [x] API endpoint plan completed
+- [x] Authentication endpoints planned
+- [x] User profile endpoints planned
+- [x] Event endpoints planned
+- [x] Category endpoints planned
+- [x] Event enrolment endpoints planned
+- [x] Result endpoints planned
+- [x] Role-based access planned
+- [x] SQL Server database script completed
+- [x] Required sample data included
+- [x] SQL script tested in SSMS
+- [x] GitHub Actions validation configured
+- [x] Successful CI/CD build recorded
+- [x] AI use disclosed
+- [ ] Part 1 video presentation uploaded
+- [ ] Final YouTube link added to README
+
+The Part 1 video presentation and YouTube link will be completed before final submission.
+
 PROG6212 – Programming 2B  
 RaceDay Event Management System  
 2026
