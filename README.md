@@ -130,6 +130,19 @@ The script was tested in SSMS and successfully creates and populates the RaceDay
 
 ---
 
+### Database Constraints
+
+Database constraints are used to maintain data integrity.
+
+- Primary keys uniquely identify each database record.
+- Foreign keys maintain valid relationships between tables.
+- NOT NULL prevents required information from being omitted.
+- UNIQUE prevents duplicate values such as user email addresses.
+- DEFAULT automatically supplies values such as registration dates and enrolment status.
+- CHECK restricts fields to valid values, such as recognised enrolment statuses and positive result positions.
+
+These constraints help prevent invalid or inconsistent information from being stored in RaceDay.
+
 ## API Endpoint Plan
 
 The RESTful API endpoint plan is available in:
