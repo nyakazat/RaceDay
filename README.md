@@ -143,6 +143,26 @@ Database constraints are used to maintain data integrity.
 
 These constraints help prevent invalid or inconsistent information from being stored in RaceDay.
 
+### Database Verification
+
+The database script was executed in SQL Server Management Studio to verify that the schema and seed data were created successfully.
+
+The verification queries confirmed:
+
+| Entity | Expected Records |
+| --- | ---: |
+| Role | 2 |
+| AppUser | 4 |
+| Event | 3 |
+| Category | 6 |
+| EventCategory | 6 |
+| Enrolment | 4 |
+| Result | 2 |
+
+This testing confirms that the required sample data and relationships can be created successfully by the SQL script.
+
+
+
 ## API Endpoint Plan
 
 The RESTful API endpoint plan is available in:
