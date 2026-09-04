@@ -57,6 +57,14 @@ jobs:
           grep -qi "CREATE TABLE Enrolment" docs/RaceDay_Database.sql
           grep -qi "CREATE TABLE Result" docs/RaceDay_Database.sql
 
+      - name: Validate SQL contains required constraints
+        run: |
+          grep -qi "PRIMARY KEY" docs/RaceDay_Database.sql
+          grep -qi "FOREIGN KEY" docs/RaceDay_Database.sql
+          grep -qi "NOT NULL" docs/RaceDay_Database.sql
+          grep -qi "UNIQUE" docs/RaceDay_Database.sql
+          grep -qi "DEFAULT" docs/RaceDay_Database.sql
+
       - name: Validate SQL seed data
         run: |
           grep -qi "INSERT INTO Role" docs/RaceDay_Database.sql
@@ -70,17 +78,26 @@ jobs:
       - name: Validate API endpoint plan content
         run: |
           grep -qi "Authentication" docs/API_Endpoint_Plan.md
+          grep -qi "profile" docs/API_Endpoint_Plan.md
           grep -qi "Events" docs/API_Endpoint_Plan.md
           grep -qi "Categories" docs/API_Endpoint_Plan.md
           grep -qi "Enrolment" docs/API_Endpoint_Plan.md
           grep -qi "Results" docs/API_Endpoint_Plan.md
 
+      - name: Validate README sections
+        run: |
+          grep -qi "User Roles" README.md
+          grep -qi "Database" README.md
+          grep -qi "API Endpoint Plan" README.md
+          grep -qi "CI/CD" README.md
+          grep -qi "Video Presentation" README.md
+
       - name: RaceDay Part 1 validation successful
         run: |
           echo "All required RaceDay Part 1 files are present."
-          echo "SQL schema and seed data validation passed."
+          echo "SQL schema validation passed."
+          echo "SQL constraint validation passed."
+          echo "SQL seed data validation passed."
           echo "API endpoint plan validation passed."
-          echo "Repository structure validation passed."
-        run: |
-          echo "All required RaceDay Part 1 files are present."
-          echo "Repository structure validation passed."
+          echo "README validation passed."
+          echo "RaceDay Part 1 repository validation completed successfully."
