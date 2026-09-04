@@ -330,6 +330,12 @@ The final work was reviewed, tested and understood before submission. Database f
 
 The Part 1 video presentation and YouTube link will be completed before final submission.
 
+## Video Presentation
+
+Part 1 demonstration video:
+
+https://youtu.be/yWSk-3N8hI4?si=hVWGU6X5hF83w1Eq
+
 PROG6212 – Programming 2B  
 RaceDay Event Management System  
 2026
