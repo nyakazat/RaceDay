@@ -160,3 +160,92 @@ RaceDay/
 └── .github/
     └── workflows/
         └── part1-validation.yml
+
+```
+
+---
+
+## Running the Database Script
+
+### Requirements
+
+To run the RaceDay database script you need:
+
+- Microsoft SQL Server
+- SQL Server Management Studio (SSMS)
+
+### Instructions
+
+1. Open SQL Server Management Studio.
+2. Connect to a SQL Server instance.
+3. Open `docs/RaceDay_Database.sql`.
+4. Execute the complete SQL script.
+5. The script creates the RaceDay database.
+6. The required tables are created automatically.
+7. Sample data is inserted.
+8. Verification SELECT queries display the inserted data.
+
+The script is designed to recreate the RaceDay database when executed, allowing it to be tested from a clean state.
+
+---
+
+## CI/CD
+
+GitHub Actions is used to validate the Part 1 repository structure.
+
+The workflow checks that:
+
+- The `/docs` directory exists.
+- `RaceDay_ERD.png` exists.
+- `API_Endpoint_Plan.md` exists.
+- `RaceDay_Database.sql` exists.
+- `README.md` exists.
+- The SQL script contains the required RaceDay tables.
+
+The workflow is stored at:
+
+`.github/workflows/part1-validation.yml`
+
+### Successful Build
+
+A successful GitHub Actions build confirms that the required Part 1 repository structure and files have passed validation.
+
+**CI/CD Screenshot:**
+
+<!-- Add the successful green GitHub Actions screenshot here -->
+
+---
+
+## Video Presentation
+
+An unlisted YouTube video demonstrating and explaining Part 1 will be added before final submission.
+
+**YouTube Video:** ADD VIDEO LINK HERE
+
+The presentation will demonstrate and explain:
+
+- RaceDay system planning
+- ERD design decisions
+- Entity relationships
+- API endpoint planning
+- Role-based access decisions
+- SQL database structure
+- SQL script execution in SSMS
+- Sample data and verification results
+- GitHub Actions CI/CD validation
+
+---
+
+## AI Use Disclosure
+
+AI tools were used as a support resource during the planning and development process, including assistance with structuring documentation, reviewing database design, explaining SQL concepts and reviewing code.
+
+The final work was reviewed, tested and understood before submission. Database functionality was tested directly using SQL Server Management Studio.
+
+---
+
+## Author
+
+PROG6212 – Programming 2B  
+RaceDay Event Management System  
+2026
