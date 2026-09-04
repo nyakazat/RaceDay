@@ -54,3 +54,17 @@ A Participant can create an account, browse upcoming events, select a category a
 - Enrolment connects a Participant to an EventCategory.
 - Result is connected to an Enrolment so that results can only be recorded for participants who entered an event.
 - Appropriate HTTP status codes will be returned, including 200 OK, 201 Created, 204 No Content, 400 Bad Request, 401 Unauthorized, 403 Forbidden, 404 Not Found and 409 Conflict.
+
+---
+
+## API Design Notes
+
+The RaceDay API follows RESTful principles and uses resource-based routes.
+
+Authentication endpoints allow users to register and log in. Event endpoints allow users to retrieve event information, while event management operations are restricted to Organisers.
+
+Category endpoints support the management and retrieval of event categories. Enrolment endpoints connect Participants to the event categories they enter.
+
+Result endpoints allow Organisers to capture participant race results, while Participants can retrieve their own performance information.
+
+Role-based access will be enforced at the API level during Part 2 to ensure that Organiser and Participant functionality remains appropriately separated.
