@@ -84,6 +84,19 @@ Participants enter events through the Enrolment entity. Each enrolment connects 
 A Result is associated with an Enrolment. This ensures that race results can only be captured for participants who have enrolled in an event.
 
 ---
+### Key Relationships
+
+The main relationships in the RaceDay database are:
+
+- One Role can be assigned to many AppUsers.
+- One Organiser can create many Events.
+- One Event can contain many EventCategories.
+- One Category can be used by many EventCategories.
+- One Participant can have many Enrolments.
+- One EventCategory can have many Enrolments.
+- One Enrolment can have a maximum of one Result.
+
+The EventCategory table resolves the many-to-many relationship between Events and Categories.
 
 ## Database
 
