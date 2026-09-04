@@ -263,6 +263,20 @@ The GitHub Actions workflow successfully validates the RaceDay Part 1 repository
 
 ## Video Presentation
 
+## Part 1 Design Decisions
+
+The RaceDay data model was designed around the two required system roles: Organiser and Participant.
+
+A separate Role table was selected so that user roles can be represented consistently without duplicating role information for every user.
+
+EventCategory was introduced because an Event may provide multiple Categories, while Categories can be associated with different Events. EventCategory resolves this many-to-many relationship and allows each enrolment to reference the exact category selected by a participant.
+
+Enrolments connect Participants to EventCategories. This makes it possible for a Participant to enter different events and categories while maintaining a history of their entries.
+
+Results are linked to Enrolments rather than directly to users. This ensures that each result belongs to a specific event entry and allows Participants to build a performance history across multiple events.
+
+The API endpoint plan follows the same data model so that the database design and planned Part 2 implementation remain consistent.
+
 An unlisted YouTube video demonstrating and explaining Part 1 will be added before final submission.
 
 **YouTube Video:** ADD VIDEO LINK HERE
