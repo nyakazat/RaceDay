@@ -2,6 +2,17 @@
    RaceDay Event Management System
    PROG6212 Part 1 - SQL Database Script
    ========================================================= */
+/*
+Database Design Summary:
+The RaceDay database uses a relational structure to manage users,
+events, categories, enrolments and participant results.
+
+Role-based functionality is supported through the Role and AppUser
+tables. EventCategory resolves the many-to-many relationship between
+events and categories, while Enrolment connects participants to the
+categories they enter. Results are linked directly to enrolments to
+ensure that results belong to registered participants.
+*/
 
 USE master;
 GO
