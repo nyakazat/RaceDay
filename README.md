@@ -57,6 +57,7 @@ The folder contains:
 - `RaceDay_ERD.png` – Entity Relationship Diagram
 - `API_Endpoint_Plan.md` – planned RESTful API endpoints
 - `RaceDay_Database.sql` – SQL Server database creation and sample data script
+- `CI_CD_Green_Build.png` – evidence of a successful GitHub Actions build
 
 ---
 
@@ -155,12 +156,12 @@ RaceDay/
 ├── docs/
 │   ├── RaceDay_ERD.png
 │   ├── API_Endpoint_Plan.md
-│   └── RaceDay_Database.sql
+│   ├── RaceDay_Database.sql
+│   └── CI_CD_Green_Build.png
 │
 └── .github/
     └── workflows/
         └── part1-validation.yml
-
 ```
 
 ---
@@ -180,7 +181,7 @@ To run the RaceDay database script you need:
 2. Connect to a SQL Server instance.
 3. Open `docs/RaceDay_Database.sql`.
 4. Execute the complete SQL script.
-5. The script creates the RaceDay database.
+5. The script creates the `RaceDay` database.
 6. The required tables are created automatically.
 7. Sample data is inserted.
 8. Verification SELECT queries display the inserted data.
@@ -208,11 +209,9 @@ The workflow is stored at:
 
 ### Successful Build
 
-A successful GitHub Actions build confirms that the required Part 1 repository structure and files have passed validation.
+The GitHub Actions workflow successfully validates the RaceDay Part 1 repository structure.
 
-**CI/CD Screenshot:**
-
-<!-- Add the successful green GitHub Actions screenshot here -->
+![Successful RaceDay CI/CD Build](docs/CI_CD_Green_Build.png)
 
 ---
 
