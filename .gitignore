@@ -1,0 +1,17 @@
+
+.vs/
+bin/
+obj/
+*.user
+*.suo
+*.db
+*.db-shm
+*.db-wal
+*.mdf
+*.ldf
+*.sqlite
+*.sqlite-shm
+*.sqlite-wal
+.env
+appsettings.Development.json
+TestResults/
