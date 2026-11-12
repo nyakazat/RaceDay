@@ -1,0 +1,128 @@
+﻿@model RaceDayMVC.ViewModels.EventDetailsViewModel
+
+@{
+    ViewData["Title"] = "Event Details";
+    string? role = Context.Session.GetString("Role");
+}
+
+<div class="container py-5">
+
+    <a asp-controller="Home"
+       asp-action="Events"
+       class="btn btn-outline-light mb-4">
+        ← Back to Events
+    </a>
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success">
+            @TempData["Success"]
+        </div>
+    }
+
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger">
+            @TempData["Error"]
+        </div>
+    }
+
+    <div class="card bg-dark text-white border-secondary p-4">
+
+        <h1 class="display-5 fw-bold mb-3">
+            @Model.Event.EventName
+        </h1>
+
+        <p class="text-info fs-5">
+            @Model.Event.EventType
+        </p>
+
+        <hr class="border-secondary" />
+
+        <div class="mb-3">
+            <strong>Date:</strong>
+            @Model.Event.EventDate.ToString("dd MMMM yyyy HH:mm")
+        </div>
+
+        <div class="mb-3">
+            <strong>Location:</strong>
+            @Model.Event.Location
+        </div>
+
+        <div class="mb-3">
+            <strong>Distance:</strong>
+            @Model.Event.Distance km
+        </div>
+
+        <div class="mb-4">
+            <strong>Description:</strong>
+            <p class="mt-2">
+                @(string.IsNullOrWhiteSpace(Model.Event.Description)
+                                ? "No description available."
+                                : Model.Event.Description)
+            </p>
+        </div>
+
+        <hr class="border-secondary" />
+
+        <h3 class="mb-3">Available Categories</h3>
+
+        @if (Model.Categories != null && Model.Categories.Any())
+        {
+            <div class="row">
+                @foreach (var category in Model.Categories)
+                {
+                    <div class="col-md-6 mb-3">
+                        <div class="border border-secondary rounded p-3">
+
+                            <h5>@category.CategoryName</h5>
+
+                            <small class="text-secondary">
+                                Category ID: @category.EventCategoryID
+                            </small>
+
+                            @if (role == "Participant")
+                            {
+                                <form asp-controller="Home"
+                                      asp-action="Enrol"
+                                      method="post"
+                                      class="mt-3">
+
+                                    @Html.AntiForgeryToken()
+
+                                    <input type="hidden"
+                                           name="eventCategoryId"
+                                           value="@category.EventCategoryID" />
+
+                                    <input type="hidden"
+                                           name="eventId"
+                                           value="@Model.Event.EventID" />
+
+                                    <button type="submit"
+                                            class="btn btn-success w-100">
+                                        Enrol in This Category
+                                    </button>
+                                </form>
+                            }
+                            else if (string.IsNullOrEmpty(role))
+                            {
+                                <a asp-controller="Account"
+                                   asp-action="Login"
+                                   class="btn btn-primary w-100 mt-3">
+                                    Login to Enrol
+                                </a>
+                            }
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+        else
+        {
+            <p class="text-secondary">
+                No categories have been added to this event yet.
+            </p>
+        }
+
+    </div>
+</div>

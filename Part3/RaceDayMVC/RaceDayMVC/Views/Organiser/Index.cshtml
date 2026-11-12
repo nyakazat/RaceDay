@@ -1,0 +1,77 @@
+﻿@{
+    ViewData["Title"] = "Organiser Dashboard";
+}
+
+<div class="container mt-5">
+
+    <h1 class="fw-bold">Organiser Dashboard</h1>
+
+    <p class="lead">
+        Welcome to RaceDay!
+    </p>
+
+    <hr />
+
+    <div class="row g-4">
+
+        <div class="col-md-4">
+            <div class="card shadow-sm p-4 h-100">
+                <h4>Manage Events</h4>
+                <p>
+                    Create, update and manage your sporting events.
+                </p>
+                <a asp-controller="Organiser"
+                   asp-action="ManageEvents"
+                   class="btn btn-primary">
+                    Manage Events
+                </a>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card shadow-sm p-4 h-100">
+                <h4>Participants</h4>
+                <p>
+                    View participants registered for your events.
+                </p>
+                <a asp-controller="Organiser"
+                   asp-action="Participants"
+                   class="btn btn-primary">
+                    View Participants
+                </a>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card shadow-sm p-4 h-100">
+                <h4>Results</h4>
+                <p>
+                    Manage and view sporting event results.
+                </p>
+                <a asp-controller="Organiser"
+                   asp-action="Results"
+                   class="btn btn-primary">
+                    View Results
+                </a>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="mt-5">
+
+        <form asp-controller="Account"
+              asp-action="Logout"
+              method="post">
+
+            @Html.AntiForgeryToken()
+
+            <button type="submit" class="btn btn-danger">
+                Logout
+            </button>
+
+        </form>
+
+    </div>
+
+</div>

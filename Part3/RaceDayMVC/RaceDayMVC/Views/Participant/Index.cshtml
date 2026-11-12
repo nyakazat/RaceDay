@@ -1,0 +1,280 @@
+﻿@model List<RaceDayMVC.ViewModels.EventViewModel>
+
+@{
+    ViewData["Title"] = "Participant Dashboard";
+
+    var enrolments = ViewBag.MyEnrolments
+        as List<RaceDayMVC.ViewModels.EnrolmentViewModel>
+        ?? new List<RaceDayMVC.ViewModels.EnrolmentViewModel>();
+
+    var results = ViewBag.MyResults
+        as List<RaceDayMVC.ViewModels.ResultViewModel>
+        ?? new List<RaceDayMVC.ViewModels.ResultViewModel>();
+}
+
+<div class="container py-5">
+
+    <div class="mb-5">
+        <h1 class="display-5 fw-bold">Participant Dashboard</h1>
+        <p class="text-muted">
+            Welcome to RaceDay. Find your next challenge.
+        </p>
+    </div>
+
+    @if (!string.IsNullOrEmpty(ViewBag.Error))
+    {
+        <div class="alert alert-danger">
+            @ViewBag.Error
+        </div>
+    }
+
+    <!-- DASHBOARD STATISTICS -->
+    <div class="row g-4 mb-5">
+
+        <div class="col-md-4">
+            <div class="card bg-dark text-white border-secondary p-4 h-100">
+                <h5>Available Events</h5>
+                <h2 class="display-5 fw-bold">
+                    @(Model?.Count ?? 0)
+                </h2>
+                <p class="text-secondary mb-0">
+                    Events you can explore
+                </p>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card bg-dark text-white border-secondary p-4 h-100">
+                <h5>My Enrolments</h5>
+                <h2 class="display-5 fw-bold">
+                    @enrolments.Count
+                </h2>
+                <p class="text-secondary mb-0">
+                    Your registered events
+                </p>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card bg-dark text-white border-secondary p-4 h-100">
+                <h5>My Results</h5>
+                <h2 class="display-5 fw-bold">
+                    @results.Count
+                </h2>
+                <p class="text-secondary mb-0">
+                    Your race results
+                </p>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- MY ENROLMENTS -->
+    <div class="mb-5">
+
+        <h2 class="fw-bold">My Enrolments</h2>
+
+        <p class="text-muted">
+            Events you have registered for.
+        </p>
+
+        @if (!enrolments.Any())
+        {
+            <div class="alert alert-info">
+                You haven't enrolled in any events yet.
+                Explore the available events below.
+            </div>
+        }
+        else
+        {
+            <div class="row g-4">
+
+                @foreach (var enrolment in enrolments)
+                {
+                    var enrolledEvent = Model?
+                    .FirstOrDefault(e => e.EventID == enrolment.EventID);
+
+                    <div class="col-md-6 col-lg-4">
+
+                        <div class="card bg-dark text-white border-secondary h-100">
+
+                            <div class="card-body p-4">
+
+                                <h5 class="fw-bold">
+                                    @(enrolledEvent?.EventName
+                                                                ?? $"Event #{enrolment.EventID}")
+                        </h5>
+
+                                <p class="text-secondary mb-2">
+                                    Category ID: @enrolment.EventCategoryID
+                                </p>
+
+                                <p class="mb-2">
+                                    <strong>Enrolment Date:</strong>
+                                    @enrolment.EnrolmentDate.ToString("dd MMM yyyy")
+                                </p>
+
+                                <p class="mb-3">
+                                    <strong>Status:</strong>
+
+                            @if (enrolment.Status == "Active")
+                                    {
+                                        <span class="badge bg-success">
+                                            Active
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-secondary">
+                                            @enrolment.Status
+                                        </span>
+                                    }
+                                </p>
+
+                                @if (enrolledEvent != null)
+                                {
+                                    <a asp-controller="Home"
+                                       asp-action="EventDetails"
+                                       asp-route-id="@enrolment.EventID"
+                                       class="btn btn-outline-light w-100">
+                                        View Event
+                                    </a>
+                                }
+
+                            </div>
+
+                        </div>
+
+                    </div>
+                }
+
+            </div>
+        }
+
+    </div>
+
+    <!-- MY RACE RESULTS -->
+    <div class="mb-5">
+
+        <h2 class="fw-bold">My Results</h2>
+
+        <p class="text-muted">
+            Your recorded race performance.
+        </p>
+
+        @if (!results.Any())
+        {
+            <div class="alert alert-info">
+                No race results are available yet.
+                Your results will appear here once an organiser records them.
+            </div>
+        }
+        else
+        {
+            <div class="table-responsive">
+
+                <table class="table table-dark table-striped table-bordered align-middle">
+
+                    <thead>
+                        <tr>
+                            <th>Result ID</th>
+                            <th>Enrolment ID</th>
+                            <th>Finish Time</th>
+                            <th>Position</th>
+                            <th>Points</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        @foreach (var result in results)
+                        {
+                            <tr>
+                                <td>@result.ResultID</td>
+                                <td>@result.EnrolmentID</td>
+                                <td>@result.FinishTime</td>
+                                <td>@result.FinishPosition</td>
+                                <td>@result.Points</td>
+                            </tr>
+                        }
+                    </tbody>
+
+                </table>
+
+            </div>
+        }
+
+    </div>
+
+    <!-- AVAILABLE EVENTS -->
+    <div class="mb-4">
+        <h2 class="fw-bold">Explore Events</h2>
+        <p class="text-muted">
+            Find an event and register for your next challenge.
+        </p>
+    </div>
+
+    @if (Model == null || !Model.Any())
+    {
+        <div class="alert alert-info">
+            No events are currently available.
+        </div>
+    }
+    else
+    {
+        <div class="row g-4">
+
+            @foreach (var item in Model)
+            {
+                <div class="col-md-6 col-lg-4">
+
+                    <div class="card h-100 shadow-sm border-0">
+
+                        <div class="card-body p-4">
+
+                            <span class="badge bg-primary mb-3">
+                                @item.EventType
+                            </span>
+
+                            <h4 class="fw-bold">
+                                @item.EventName
+                            </h4>
+
+                            <p class="text-muted">
+                                @item.Description
+                            </p>
+
+                            <hr />
+
+                            <p>
+                                <strong>Date:</strong>
+                                @item.EventDate.ToString("dd MMMM yyyy")
+                            </p>
+
+                            <p>
+                                <strong>Location:</strong>
+                                @item.Location
+                            </p>
+
+                            <p>
+                                <strong>Distance:</strong>
+                                @item.Distance km
+                            </p>
+
+                            <a asp-controller="Home"
+                               asp-action="EventDetails"
+                               asp-route-id="@item.EventID"
+                               class="btn btn-primary w-100 mt-3">
+                                View Event
+                            </a>
+
+                        </div>
+
+                    </div>
+
+                </div>
+            }
+
+        </div>
+    }
+
+</div>

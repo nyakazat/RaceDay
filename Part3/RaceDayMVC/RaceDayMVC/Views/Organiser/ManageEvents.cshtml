@@ -1,0 +1,133 @@
+﻿@model List<RaceDayMVC.ViewModels.EventViewModel>
+
+@{
+    ViewData["Title"] = "Manage Events";
+}
+
+<div class="container py-5">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h1 class="fw-bold">Manage Events</h1>
+            <p class="text-muted">
+                View and manage your sporting events.
+            </p>
+        </div>
+
+        <a asp-controller="Organiser"
+           asp-action="Index"
+           class="btn btn-outline-secondary">
+            Back to Dashboard
+        </a>
+    </div>
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success">
+            @TempData["Success"]
+        </div>
+    }
+
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger">
+            @TempData["Error"]
+        </div>
+    }
+
+    @if (!string.IsNullOrEmpty(ViewBag.Error))
+    {
+        <div class="alert alert-danger">
+            @ViewBag.Error
+        </div>
+    }
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <div>
+            <h4 class="fw-bold mb-1">Your Events</h4>
+            <p class="text-muted mb-0">
+                Total events created: @(Model?.Count ?? 0)
+            </p>
+        </div>
+
+        <a asp-controller="Organiser"
+           asp-action="CreateEvent"
+           class="btn btn-primary">
+            + Create New Event
+        </a>
+
+    </div>
+
+    @if (Model == null || !Model.Any())
+    {
+        <div class="alert alert-info">
+            You haven't created any events yet.
+        </div>
+    }
+    else
+    {
+        <div class="table-responsive">
+
+            <table class="table table-striped table-bordered align-middle">
+
+                <thead class="table-dark">
+                    <tr>
+                        <th>Event ID</th>
+                        <th>Event Name</th>
+                        <th>Type</th>
+                        <th>Date</th>
+                        <th>Location</th>
+                        <th>Distance</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>@item.EventID</td>
+                            <td>@item.EventName</td>
+                            <td>@item.EventType</td>
+                            <td>@item.EventDate.ToString("dd MMM yyyy")</td>
+                            <td>@item.Location</td>
+                            <td>@item.Distance km</td>
+
+                            <td>
+                                <div class="d-flex gap-2">
+
+                                    <a asp-controller="Organiser"
+                                       asp-action="EditEvent"
+                                       asp-route-id="@item.EventID"
+                                       class="btn btn-sm btn-warning">
+                                        Edit
+                                    </a>
+
+                                    <form asp-controller="Organiser"
+                                          asp-action="DeleteEvent"
+                                          asp-route-id="@item.EventID"
+                                          method="post"
+                                          onsubmit="return confirm('Are you sure you want to delete this event?');">
+
+                                        @Html.AntiForgeryToken()
+
+                                        <button type="submit"
+                                                class="btn btn-sm btn-danger">
+                                            Delete
+                                        </button>
+
+                                    </form>
+
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+
+            </table>
+
+        </div>
+    }
+
+</div>

@@ -1,0 +1,84 @@
+﻿@model List<RaceDayMVC.ViewModels.EventViewModel>
+
+@{
+    ViewData["Title"] = "Explore Events";
+}
+
+<div class="container py-5">
+
+    <div class="text-center mb-5">
+        <h1 class="display-4 fw-bold">Explore Events</h1>
+        <p class="text-muted">Find your next challenge with RaceDay.</p>
+    </div>
+
+    @if (!string.IsNullOrEmpty(ViewBag.Error))
+    {
+        <div class="alert alert-danger">
+            @ViewBag.Error
+        </div>
+    }
+
+    @if (Model == null || !Model.Any())
+    {
+        <div class="text-center py-5">
+            <h3>No events available yet.</h3>
+            <p class="text-muted">
+                Check back soon for upcoming races, walks and cycling events.
+            </p>
+        </div>
+    }
+    else
+    {
+        <div class="row g-4">
+
+            @foreach (var item in Model)
+            {
+                <div class="col-md-6 col-lg-4">
+
+                    <div class="card h-100 shadow-sm border-0">
+
+                        <div class="card-body p-4">
+
+                            <span class="badge bg-primary mb-3">
+                                @item.EventType
+                            </span>
+
+                            <h4 class="fw-bold">
+                                @item.EventName
+                            </h4>
+
+                            <p class="text-muted">
+                                @item.Description
+                            </p>
+
+                            <hr />
+
+                            <p>
+                                <strong>Date:</strong>
+                                @item.EventDate.ToString("dd MMMM yyyy")
+                            </p>
+
+                            <p>
+                                <strong>Location:</strong>
+                                @item.Location
+                            </p>
+
+                            <p>
+                                <strong>Distance:</strong>
+                                @item.Distance km
+                            </p>
+
+                            <a asp-controller="Home"
+                               asp-action="EventDetails"
+                               asp-route-id="@item.EventID"
+                               class="btn btn-primary w-100 mt-3">
+                                View Details
+                            </a>
+
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>

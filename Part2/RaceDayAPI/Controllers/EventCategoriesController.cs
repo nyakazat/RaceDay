@@ -23,9 +23,6 @@ namespace RaceDayAPI.Controllers
             _context = context;
         }
 
-        // =====================================
-        // VERIFY AUTHENTICATED SESSION
-        // =====================================
         private bool HasValidSession()
         {
             int? sessionUserID =
@@ -35,8 +32,7 @@ namespace RaceDayAPI.Controllers
                 HttpContext.Session.GetString("Role");
 
             string? claimUserID =
-                User.FindFirstValue(
-                    ClaimTypes.NameIdentifier);
+                User.FindFirstValue(ClaimTypes.NameIdentifier);
 
             string? claimRole =
                 User.FindFirstValue(ClaimTypes.Role);
@@ -50,19 +46,14 @@ namespace RaceDayAPI.Controllers
         private int GetUserID()
         {
             return int.Parse(
-                User.FindFirstValue(
-                    ClaimTypes.NameIdentifier)!);
+                User.FindFirstValue(ClaimTypes.NameIdentifier)!);
         }
 
-        // =====================================
-        // GET ALL EVENT CATEGORIES
-        // =====================================
+        // GET ALL EVENT CATEGORIES - PUBLIC
         [HttpGet]
+        [AllowAnonymous]
         public async Task<IActionResult> GetEventCategories()
         {
-            if (!HasValidSession())
-                return Unauthorized("Invalid session.");
-
             var categories = await _context.EventCategories
                 .AsNoTracking()
                 .Select(ec => new
@@ -78,15 +69,11 @@ namespace RaceDayAPI.Controllers
             return Ok(categories);
         }
 
-        // =====================================
-        // GET EVENT CATEGORY BY ID
-        // =====================================
+        // GET EVENT CATEGORY BY ID - PUBLIC
         [HttpGet("{id}")]
+        [AllowAnonymous]
         public async Task<IActionResult> GetEventCategory(int id)
         {
-            if (!HasValidSession())
-                return Unauthorized("Invalid session.");
-
             var category = await _context.EventCategories
                 .AsNoTracking()
                 .Where(ec => ec.EventCategoryID == id)
@@ -106,15 +93,11 @@ namespace RaceDayAPI.Controllers
             return Ok(category);
         }
 
-        // =====================================
-        // GET CATEGORIES FOR AN EVENT
-        // =====================================
+        // GET CATEGORIES FOR AN EVENT - PUBLIC
         [HttpGet("event/{eventId}")]
+        [AllowAnonymous]
         public async Task<IActionResult> GetByEvent(int eventId)
         {
-            if (!HasValidSession())
-                return Unauthorized("Invalid session.");
-
             bool eventExists = await _context.Events
                 .AnyAsync(e => e.EventID == eventId);
 
@@ -136,10 +119,7 @@ namespace RaceDayAPI.Controllers
             return Ok(categories);
         }
 
-        // =====================================
-        // ASSIGN CATEGORY TO EVENT
-        // Owning Organiser only
-        // =====================================
+        // ASSIGN CATEGORY - ORGANISER ONLY
         [HttpPost]
         [Authorize(Roles = "Organiser")]
         public async Task<IActionResult> CreateEventCategory(
@@ -197,10 +177,7 @@ namespace RaceDayAPI.Controllers
                 });
         }
 
-        // =====================================
-        // REMOVE CATEGORY FROM EVENT
-        // Owning Organiser only
-        // =====================================
+        // REMOVE CATEGORY - ORGANISER ONLY
         [HttpDelete("{id}")]
         [Authorize(Roles = "Organiser")]
         public async Task<IActionResult> DeleteEventCategory(int id)
@@ -237,9 +214,6 @@ namespace RaceDayAPI.Controllers
         }
     }
 
-    // =====================================
-    // EVENT CATEGORY REQUEST DTO
-    // =====================================
     public class EventCategoryRequest
     {
         [Range(1, int.MaxValue)]

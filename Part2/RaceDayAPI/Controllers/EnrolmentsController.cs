@@ -25,9 +25,6 @@ namespace RaceDayAPI.Controllers
             _context = context;
         }
 
-        // =====================================
-        // VERIFY AUTHENTICATED SESSION
-        // =====================================
         private bool HasValidSession()
         {
             int? sessionUserID =
@@ -56,16 +53,8 @@ namespace RaceDayAPI.Controllers
                     ClaimTypes.NameIdentifier)!);
         }
 
-        // =====================================
         // GET ENROLMENTS FOR OWN EVENTS
-        // =====================================
 
-        /// <summary>
-        /// Gets enrolments for events owned by the Organiser.
-        /// </summary>
-        /// <response code="200">Enrolments retrieved.</response>
-        /// <response code="401">Not authenticated.</response>
-        /// <response code="403">Organiser role required.</response>
         [HttpGet]
         [Authorize(Roles = "Organiser")]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -87,6 +76,9 @@ namespace RaceDayAPI.Controllers
                 {
                     e.EnrolmentID,
                     e.UserID,
+                    FirstName = e.User.FirstName,
+                    LastName = e.User.LastName,
+                    Email = e.User.Email,
                     e.EventCategoryID,
                     EventID = e.EventCategory.EventID,
                     e.EnrolmentDate,
@@ -97,13 +89,8 @@ namespace RaceDayAPI.Controllers
             return Ok(enrolments);
         }
 
-        // =====================================
         // GET PARTICIPANT'S OWN ENROLMENTS
-        // =====================================
 
-        /// <summary>
-        /// Gets the logged-in Participant's enrolments.
-        /// </summary>
         [HttpGet("my")]
         [Authorize(Roles = "Participant")]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -133,23 +120,9 @@ namespace RaceDayAPI.Controllers
             return Ok(enrolments);
         }
 
-        // =====================================
         // GET ENROLMENT BY ID
-        // =====================================
 
-        /// <summary>
-        /// Gets an enrolment by ID.
-        /// </summary>
-        /// <remarks>
-        /// Only the enrolled Participant or the
-        /// Organiser who owns the event can view it.
-        /// </remarks>
-        /// <param name="id">Enrolment ID.</param>
         [HttpGet("{id}")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        [ProducesResponseType(StatusCodes.Status403Forbidden)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetEnrolment(int id)
         {
             if (!HasValidSession())
@@ -198,26 +171,8 @@ namespace RaceDayAPI.Controllers
             });
         }
 
-        // =====================================
         // CREATE ENROLMENT
-        // =====================================
 
-        /// <summary>
-        /// Enrols the logged-in Participant in an event category.
-        /// </summary>
-        /// <remarks>
-        /// Participant access only.
-        /// The UserID is obtained from the login session.
-        /// Duplicate enrolments are rejected.
-        /// </remarks>
-        /// <param name="request">
-        /// The EventCategoryID to enrol in.
-        /// </param>
-        /// <response code="201">Enrolment created.</response>
-        /// <response code="400">Invalid category.</response>
-        /// <response code="401">Not authenticated.</response>
-        /// <response code="403">Participant role required.</response>
-        /// <response code="409">Already enrolled.</response>
         [HttpPost]
         [Authorize(Roles = "Participant")]
         [ProducesResponseType(StatusCodes.Status201Created)]
@@ -279,17 +234,8 @@ namespace RaceDayAPI.Controllers
                 });
         }
 
-        // =====================================
         // UPDATE OWN ENROLMENT
-        // =====================================
 
-        /// <summary>
-        /// Updates the logged-in Participant's enrolment status.
-        /// </summary>
-        /// <param name="id">Enrolment ID.</param>
-        /// <param name="request">
-        /// Status must be Active or Cancelled.
-        /// </param>
         [HttpPut("{id}")]
         [Authorize(Roles = "Participant")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
@@ -329,18 +275,8 @@ namespace RaceDayAPI.Controllers
             return NoContent();
         }
 
-        // =====================================
         // DELETE OWN ENROLMENT
-        // =====================================
 
-        /// <summary>
-        /// Deletes a Participant's own enrolment.
-        /// </summary>
-        /// <remarks>
-        /// Enrolments containing race results
-        /// cannot be deleted.
-        /// </remarks>
-        /// <param name="id">Enrolment ID.</param>
         [HttpDelete("{id}")]
         [Authorize(Roles = "Participant")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
@@ -382,18 +318,12 @@ namespace RaceDayAPI.Controllers
         }
     }
 
-    // =====================================
-    // CREATE ENROLMENT REQUEST DTO
-    // =====================================
     public class CreateEnrolmentRequest
     {
         [Range(1, int.MaxValue)]
         public int EventCategoryID { get; set; }
     }
 
-    // =====================================
-    // UPDATE ENROLMENT REQUEST DTO
-    // =====================================
     public class UpdateEnrolmentRequest
     {
         [Required]

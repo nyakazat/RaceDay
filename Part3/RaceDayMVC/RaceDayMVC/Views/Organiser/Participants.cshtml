@@ -1,0 +1,181 @@
+﻿@model List<RaceDayMVC.ViewModels.EnrolmentViewModel>
+
+@{
+    ViewData["Title"] = "Manage Participants";
+
+    var events = ViewBag.Events
+        as List<RaceDayMVC.ViewModels.EventViewModel>
+        ?? new List<RaceDayMVC.ViewModels.EventViewModel>();
+
+    var totalParticipants = Model.Count;
+    var activeParticipants = Model.Count(e => e.Status == "Active");
+    var cancelledParticipants = Model.Count(e => e.Status == "Cancelled");
+}
+
+<div class="container py-5">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h1 class="display-5 fw-bold">Manage Participants</h1>
+            <p class="text-muted">
+                View participants registered for your events.
+            </p>
+        </div>
+
+        <a asp-controller="Organiser"
+           asp-action="Index"
+           class="btn btn-outline-secondary">
+            Back to Dashboard
+        </a>
+    </div>
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success">
+            @TempData["Success"]
+        </div>
+    }
+
+    @if (ViewBag.Error != null)
+    {
+        <div class="alert alert-danger">
+            @ViewBag.Error
+        </div>
+    }
+
+    <div class="row g-3 mb-4">
+
+        <div class="col-md-4">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-body">
+                    <p class="text-muted mb-1">Total Enrolments</p>
+                    <h2 class="fw-bold">@totalParticipants</h2>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-body">
+                    <p class="text-muted mb-1">Active Enrolments</p>
+                    <h2 class="fw-bold text-success">
+                        @activeParticipants
+                    </h2>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-body">
+                    <p class="text-muted mb-1">Cancelled Enrolments</p>
+                    <h2 class="fw-bold text-danger">
+                        @cancelledParticipants
+                    </h2>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="card shadow-sm border-0">
+
+        <div class="card-header bg-white py-3">
+            <h5 class="mb-0 fw-bold">Registered Participants</h5>
+        </div>
+
+        <div class="card-body">
+
+            @if (Model.Any())
+            {
+                <div class="table-responsive">
+
+                    <table class="table table-hover align-middle">
+
+                        <thead class="table-light">
+                            <tr>
+                                <th>Participant</th>
+                                <th>Email</th>
+                                <th>Event</th>
+                                <th>Registration Date</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            @foreach (var participant in Model)
+                            {
+                                var eventName = events
+                                .FirstOrDefault(e =>
+                                e.EventID == participant.EventID)
+                                ?.EventName ?? "Unknown Event";
+
+                                <tr>
+                                    <td>
+                                        <strong>
+                                            @participant.FirstName
+                                            @participant.LastName
+                                        </strong>
+                                        <br />
+                                        <small class="text-muted">
+                                            Participant ID: @participant.UserID
+                                        </small>
+                                    </td>
+
+                                    <td>
+                                        @participant.Email
+                                    </td>
+
+                                    <td>
+                                        @eventName
+                                    </td>
+
+                                    <td>
+                                        @participant.EnrolmentDate.ToString("dd MMM yyyy")
+                                    </td>
+
+                                    <td>
+                                        @if (participant.Status == "Active")
+                                        {
+                                            <span class="badge bg-success">
+                                                Active
+                                            </span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-secondary">
+                                                @participant.Status
+                                            </span>
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+
+                    </table>
+
+                </div>
+            }
+            else
+            {
+                <div class="text-center py-5">
+
+                    <h5>No participants registered yet</h5>
+
+                    <p class="text-muted">
+                        Participants who enrol in your events will appear here.
+                    </p>
+
+                    <a asp-controller="Organiser"
+                       asp-action="ManageEvents"
+                       class="btn btn-primary">
+                        View My Events
+                    </a>
+
+                </div>
+            }
+
+        </div>
+    </div>
+
+</div>

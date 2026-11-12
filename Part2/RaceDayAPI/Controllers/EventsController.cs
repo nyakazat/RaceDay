@@ -22,9 +22,6 @@ namespace RaceDayAPI.Controllers
             _context = context;
         }
 
-        // =====================================
-        // CHECK SESSION AND COOKIE IDENTITY
-        // =====================================
         private bool HasValidSession()
         {
             int? sessionUserID =
@@ -34,8 +31,7 @@ namespace RaceDayAPI.Controllers
                 HttpContext.Session.GetString("Role");
 
             string? claimUserID =
-                User.FindFirstValue(
-                    ClaimTypes.NameIdentifier);
+                User.FindFirstValue(ClaimTypes.NameIdentifier);
 
             string? claimRole =
                 User.FindFirstValue(ClaimTypes.Role);
@@ -49,20 +45,14 @@ namespace RaceDayAPI.Controllers
         private int GetLoggedInUserID()
         {
             return int.Parse(
-                User.FindFirstValue(
-                    ClaimTypes.NameIdentifier)!);
+                User.FindFirstValue(ClaimTypes.NameIdentifier)!);
         }
 
-        // =====================================
-        // GET ALL EVENTS
-        // Both roles
-        // =====================================
+        // GET ALL EVENTS - PUBLIC
         [HttpGet]
+        [AllowAnonymous]
         public async Task<IActionResult> GetEvents()
         {
-            if (!HasValidSession())
-                return Unauthorized("Invalid session.");
-
             var events = await _context.Events
                 .AsNoTracking()
                 .ToListAsync();
@@ -70,20 +60,14 @@ namespace RaceDayAPI.Controllers
             return Ok(events);
         }
 
-        // =====================================
-        // GET EVENT BY ID
-        // Both roles
-        // =====================================
+        // GET EVENT BY ID - PUBLIC
         [HttpGet("{id}")]
+        [AllowAnonymous]
         public async Task<IActionResult> GetEvent(int id)
         {
-            if (!HasValidSession())
-                return Unauthorized("Invalid session.");
-
             var raceEvent = await _context.Events
                 .AsNoTracking()
-                .FirstOrDefaultAsync(
-                    e => e.EventID == id);
+                .FirstOrDefaultAsync(e => e.EventID == id);
 
             if (raceEvent == null)
                 return NotFound("Event not found.");
@@ -91,10 +75,7 @@ namespace RaceDayAPI.Controllers
             return Ok(raceEvent);
         }
 
-        // =====================================
-        // CREATE EVENT
-        // Organiser only
-        // =====================================
+        // CREATE EVENT - ORGANISER ONLY
         [HttpPost]
         [Authorize(Roles = "Organiser")]
         public async Task<IActionResult> CreateEvent(
@@ -118,7 +99,6 @@ namespace RaceDayAPI.Controllers
             };
 
             _context.Events.Add(raceEvent);
-
             await _context.SaveChangesAsync();
 
             return CreatedAtAction(
@@ -127,10 +107,7 @@ namespace RaceDayAPI.Controllers
                 raceEvent);
         }
 
-        // =====================================
-        // UPDATE EVENT
-        // Owning Organiser only
-        // =====================================
+        // UPDATE EVENT - OWNING ORGANISER ONLY
         [HttpPut("{id}")]
         [Authorize(Roles = "Organiser")]
         public async Task<IActionResult> UpdateEvent(
@@ -142,8 +119,7 @@ namespace RaceDayAPI.Controllers
 
             int organiserID = GetLoggedInUserID();
 
-            var raceEvent = await _context.Events
-                .FindAsync(id);
+            var raceEvent = await _context.Events.FindAsync(id);
 
             if (raceEvent == null)
                 return NotFound("Event not found.");
@@ -163,10 +139,7 @@ namespace RaceDayAPI.Controllers
             return NoContent();
         }
 
-        // =====================================
-        // DELETE EVENT
-        // Owning Organiser only
-        // =====================================
+        // DELETE EVENT - OWNING ORGANISER ONLY
         [HttpDelete("{id}")]
         [Authorize(Roles = "Organiser")]
         public async Task<IActionResult> DeleteEvent(int id)
@@ -176,8 +149,7 @@ namespace RaceDayAPI.Controllers
 
             int organiserID = GetLoggedInUserID();
 
-            var raceEvent = await _context.Events
-                .FindAsync(id);
+            var raceEvent = await _context.Events.FindAsync(id);
 
             if (raceEvent == null)
                 return NotFound("Event not found.");
@@ -186,31 +158,24 @@ namespace RaceDayAPI.Controllers
                 return Forbid();
 
             _context.Events.Remove(raceEvent);
-
             await _context.SaveChangesAsync();
 
             return NoContent();
         }
     }
 
-    // =====================================
-    // EVENT REQUEST MODEL
-    // Only fields users are allowed to edit
-    // =====================================
     public class EventRequest
     {
         [Required]
         [StringLength(100)]
-        public string EventName { get; set; }
-            = string.Empty;
+        public string EventName { get; set; } = string.Empty;
 
         [Required]
         public DateTime EventDate { get; set; }
 
         [Required]
         [StringLength(200)]
-        public string Location { get; set; }
-            = string.Empty;
+        public string Location { get; set; } = string.Empty;
 
         [StringLength(500)]
         public string? Description { get; set; }
@@ -218,15 +183,10 @@ namespace RaceDayAPI.Controllers
         [Required]
         [RegularExpression(
             "^(Run|Walk|Cycle)$",
-            ErrorMessage =
-                "Event type must be Run, Walk or Cycle.")]
-        public string EventType { get; set; }
-            = string.Empty;
+            ErrorMessage = "Event type must be Run, Walk or Cycle.")]
+        public string EventType { get; set; } = string.Empty;
 
-        [Range(
-            typeof(decimal),
-            "0.01",
-            "999999.99")]
+        [Range(typeof(decimal), "0.01", "999999.99")]
         public decimal Distance { get; set; }
     }
 }
